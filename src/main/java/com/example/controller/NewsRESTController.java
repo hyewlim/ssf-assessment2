@@ -24,7 +24,7 @@ public class NewsRESTController {
     @Autowired
     private NewsService service;
 
-    @GetMapping ("/{id}")
+    @GetMapping (value = "/{id}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> getArticle(@PathVariable String id) {
 
         Optional<Article> article = service.retrieveArticle(id);
@@ -33,10 +33,11 @@ public class NewsRESTController {
             JsonObject err = Json.createObjectBuilder()
                     .add("error", "Cannot find news article %s".formatted(id)).build();
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err.toString());
+        } else {
+            Article article1 = article.get();
+            return ResponseEntity.ok(article1);
         }
 
-        Article article1 = article.get();
-        return ResponseEntity.ok(article1);
     }
 
     @GetMapping

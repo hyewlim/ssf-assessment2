@@ -9,6 +9,7 @@ import org.apache.commons.logging.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.RequestEntity;
@@ -35,6 +36,7 @@ public class NewsService {
     private static final String HASH_KEY = "Article";
 
     @Autowired
+    @Qualifier("redislab")
     private RedisTemplate template;
 
     @Value("${CRYPTO_API_KEY}")
@@ -102,7 +104,7 @@ public class NewsService {
 
     public Optional<Article> retrieveArticle(String id) {
         Article art = (Article) template.opsForHash().get(HASH_KEY, id);
-        Optional<Article> article = Optional.of(art);
+        Optional<Article> article = Optional.ofNullable(art);
         logger.info(">>>>articles {} retrieved<<<<<", id);
         return article;
     }
